@@ -1,52 +1,110 @@
-# Concord Three — CTF Writeup (Updated Version)
+# Concord Three – CTF Writeup
 
-## Initial Analysis (Updated)
+## Challenge Information
 
-Testing the bot with a normal spaced nickname (e.g., `Nomad Test`) results in the bot ignoring `!flag`.
-From the challenge description:
+| Field              | Value                                                                                                                |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| **CTF**            | NullCTF                                                                                                              |
+| **Category**       | Misc                                                                                                                 |
+| **Difficulty**     | Medium                                                                                                               |
+| **Points**         | 477                                                                                                                  |
+| **Challenge Link** | [https://ctf.r0devnull.team/challenges#Concord%20Three-21](https://ctf.r0devnull.team/challenges#Concord%20Three-21) |
 
-> *“She hates spaces in display names.”*
+## Description
 
-So the first hypothesis is:
+> Concord Three
+> 477
+> misc discord medium
+> Author: Stefan
+>
+> Not so tough this time! Evil Twin has been (hopefully!) defeated, but Good Twin still stands. A lot of people have been spamming "!flag" in the server, hoping to actually get one. Can you find out if the Good Twin lied to us or if it really does give out flags? PS: She hates spaces in display names.
 
-* The bot rejects any nickname containing the ASCII space `0x20`.
+**Files provided:**
 
-To verify this, various nicknames were used, including Unicode variants of whitespace.
+* None
 
-### Using a Fullwidth Space
+**Flag format:** `nullctf{.*}`
 
-Discord supports the **fullwidth space** (U+3000), which visually resembles a normal space but is not the standard ASCII space.
+---
 
-The nickname used was:
+## TL;DR
 
-```
-Nomad　''.__class__.__mro__
-```
+Good Twin only responds to `!flag` inside a **temporary ticket channel** created through the bot.
+However, it refuses to talk to users with **spaces** in their display name.
+By bypassing the filter using a **fullwidth space (U+3000)**, the bot accepts the username and returns the flag.
 
-Where the character between *Nomad* and *''.**class**.**mro*** is U+3000 (“IDEOGRAPHIC SPACE”).
+**Vulnerability:** Unicode space filter bypass
+**Approach:** Use a fullwidth space in the Discord nickname to evade the bot’s “no spaces allowed” rule.
 
-This allowed:
+---
 
-* Maintaining the "look" of a spaced nickname.
-* Bypassing the bot's naïve space filter, which only checks for `' '` (0x20).
+## Initial Analysis
 
-### Why the `''.__class__.__mro__` part?
+### Reconnaissance on the Discord bot
 
-Including this suffix tests whether the bot:
+First we tested the bot in the main Discord server.
+Typing `!flag` in public channels resulted in nothing—no error, no response.
+This hinted at a possible permission or context restriction.
 
-* Performs dangerous string evaluation (e.g., `eval`, `ast.literal_eval`, template rendering).
-* Is vulnerable to SSTI or Python object introspection.
+After exploring the server’s structure, we noticed a bot feature allowing users to create **temporary ticket channels**. Once created, the bot enters the channel directly, suggesting that commands must be issued from inside it.
 
-In this challenge, it does **not** evaluate code — so the payload isn't executed.
-However, it still **passes the validation check**, confirming the bypass.
-
-Once the nickname was changed to that form, sending:
+Inside the ticket channel, executing:
 
 ```
 !flag
 ```
 
-finally triggered the bot to reply with the correct flag.
+finally triggered a response—a URL such as:
+
+```
+http://public.ctf.r0devnull.team:3888/?hello=0.8421638273645358&username=Nomad_0_o
+```
+
+Visiting the link displayed:
+
+```
+Hello Nomad_0_o! 👋
+```
+
+However, when using a display name with **spaces**, the bot changed the username parameter to:
+
+```
+Nomad_your_name_had_a_space_so_i_used_dotreplace_flag
+```
+
+**Key observations:**
+
+* The bot ignores `!flag` unless inside a temporary ticket channel.
+* The bot *hates ASCII spaces* in display names.
+* If your nickname contains a space, the bot replaces it with `_your_name_had_a_space...`.
+
+---
+
+## Web Analysis
+
+### Understanding the username filter
+
+Testing different nicknames revealed that the bot rejects or mangles only **ASCII spaces** (`0x20`), but does not handle Unicode whitespace.
+
+The goal became:
+**Find a “space-like” character that Discord allows but the bot does not treat as a real space.**
+
+### Trying Unicode alternatives
+
+The breakthrough came with the **fullwidth space (U+3000)**, visually similar to a space but not ASCII.
+
+The nickname used:
+
+```
+Nomad　''.__class__.__mro__
+```
+
+Notes:
+
+* The character between *Nomad* and *''.**class**…* is **U+3000**, not a real space.
+* The Python-like suffix was used to test for potential template injection (the challenge did not evaluate it, but it remained harmless).
+
+With this nickname, the bot accepted the username normally.
 
 ---
 
@@ -54,20 +112,26 @@ finally triggered the bot to reply with the correct flag.
 
 ### Strategy
 
-1. Identify that the bot blocks nicknames with ASCII spaces.
-2. Replace spaces with a **fullwidth space (U+3000)**.
-3. Optionally append a Python-class-poking payload to test for code evaluation:
+1. Create a **temporary ticket channel** via the bot’s interface.
+   Good Twin only responds there.
+2. Change your Discord display name to include a **fullwidth space** instead of a normal space:
 
    ```
-   ''.__class__.__mro__
+   Nomad　''.__class__.__mro__
    ```
-4. With the allowed nickname, send `!flag` and receive the flag.
+3. Inside the ticket channel, run:
 
-### Example Implementation
+   ```
+   !flag
+   ```
+4. Visit the generated URL and retrieve the flag.
 
-Here is a helper snippet generating the *exact* bypass nickname style you used:
+### Implementation
+
+Below is a simple script that generates the exact nickname payload:
 
 ```python
+
 FULLWIDTH_SPACE = "\u3000"
 
 def build_nickname(base, payload):
@@ -87,13 +151,12 @@ $ python3 nickname_bypass.py
 Nomad　''.__class__.__mro__
 ```
 
-In Discord:
+After setting the nickname and using `!flag` inside the temporary ticket channel:
 
 ```
-!flag
+[+] Bot return flag!
 ```
-→ Bot returns the flag.
 
 ---
 
-pwned by **Nomad**
+pwn by **Nomad**
