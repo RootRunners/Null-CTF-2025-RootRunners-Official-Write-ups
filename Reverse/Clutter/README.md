@@ -8,7 +8,7 @@
 
 > A Flutter app hides its “premium unlock key” using secure storage, obfuscation, and a native channels that decrypts a flag. Reverse the app and recover the real flag. No guessing.
 
-## Intro:
+## Intro
 
 The challenge provides an Android APK (`app-release.apk`). The goal is to reverse engineer the application to find the hidden flag. The description hints at a "premium unlock key", native channels, and decryption.
 
