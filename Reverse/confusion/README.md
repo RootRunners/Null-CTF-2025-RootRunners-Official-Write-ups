@@ -1,7 +1,7 @@
 # NullCTF 2025 - Confusion Challenge Writeup
 
-**Author:** tomadimitrie 
-**Difficulty:** Hard    
+**Author:** tomadimitrie
+**Difficulty:** Hard
 **Category:** Reverse Engineering  
 
 ## Intro
