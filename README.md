@@ -43,8 +43,6 @@ Total Score from the [Scoreboard](https://ctftime.org/event/2901): **11th place 
 
 ## 📂 Challenge Index
 
----
-
 ## 🟪 Crypto
 
 | Challenge                                | Points | Write-up                                                          |
