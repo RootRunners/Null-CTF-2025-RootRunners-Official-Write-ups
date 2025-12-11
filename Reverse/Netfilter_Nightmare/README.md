@@ -1,10 +1,10 @@
 # NullCTF 2025 - Netfilter Nightmare
 
-**Author:** vektor
-**Difficulty:** Medium
-**Category:** Reverse Engineering
+**Author:** vektor  
+**Difficulty:** Medium  
+**Category:** Reverse Engineering  
 
-**Challenge Description**:
+**Challenge Description**:  
 
 > I ran a program some friend sent me and all my traffic is now messed up! All this while I was looking at a great steal on the web and can't remember the website(s) I found it on. Help!
 >
