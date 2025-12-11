@@ -571,3 +571,7 @@ This challenge demonstrates fundamental vulnerabilities in smart contract securi
 The exploit successfully drained the casino by combining these vulnerabilities: deploying a contract that pre-calculates winning conditions, bypasses the contract check via constructor execution, and leverages the predictable randomness to win every play within a single transaction.
 
 This is a common pattern in real-world blockchain security incidents, emphasizing the critical importance of proper randomness generation and understanding the Ethereum execution model when implementing access controls.
+
+Pwned!
+
+KOREONE
