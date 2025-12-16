@@ -1,9 +1,9 @@
 # Reservation
 
-| Category | Misc |
-| Points | 50 |
-| Difficulty | Easy |
-| Author | Stefan |
+Category: Misc
+Points: 50
+Difficulty: Easy
+Author: Stefan
 
 ## Challenge Description
 
@@ -87,3 +87,5 @@ The flag message "why_1s_it_r3srv3d" is a meta-hint. The `$P` and `$G` are **res
 - **Environment variables**: Knowing what standard environment variables contain is useful
 - **System knowledge**: Understanding platform-specific features (like Windows prompt formatting) directly helps solve CTF challenges
 - **Simplicity**: The solution wasn't hidden behind complex code—just requiring knowledge of a standard system feature
+
+**Writeup by B3TAR00T**
