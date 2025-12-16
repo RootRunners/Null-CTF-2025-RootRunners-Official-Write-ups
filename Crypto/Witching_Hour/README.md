@@ -1,11 +1,5 @@
 # Witching Hour
 
-**Category:** Crypto  
-**Difficulty:** Medium/Hard  
-**CTF:** nullCTF  
-
----
-
 ## Description
 
 The challenge provides two points on a curve defined over rational numbers:
@@ -93,3 +87,4 @@ Applying XOR again recovers the plaintext.
 
 ## Flag
 nullctf{I_w0nder_wh0_!s_th3_w!tch_0f_Agn3s!?_6920686f7065207468652063746620776173206e696365}
+
