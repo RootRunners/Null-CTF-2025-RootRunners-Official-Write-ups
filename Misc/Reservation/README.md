@@ -1,10 +1,10 @@
 # Reservation
-
+```
 Category: Misc
 Points: 50
 Difficulty: Easy
 Author: Stefan
-
+```
 ## Challenge Description
 
 > I wanted to take my inexistent girlfriend to this fancy restaurant called Windows, but they keep asking me for a key PROMPT. I don't know what to do, can you help me?
@@ -89,3 +89,4 @@ The flag message "why_1s_it_r3srv3d" is a meta-hint. The `$P` and `$G` are **res
 - **Simplicity**: The solution wasn't hidden behind complex code—just requiring knowledge of a standard system feature
 
 **Writeup by B3TAR00T**
+
